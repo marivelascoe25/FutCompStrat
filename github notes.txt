@@ -1,0 +1,14 @@
+Clone empty repositories:
+https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+
+Adding changes in git bash: go to folder first through "cd folder"
+- git pull: pull the changes from github
+- git add . : add all changes made locally
+- git commit -m "this is what I did to the code": commit with a note 
+- git push: push the new code to the github
+
+
+If you have changed in the files but you want to get the version from github without your changes: 
+git add .
+git stash
+git pull
