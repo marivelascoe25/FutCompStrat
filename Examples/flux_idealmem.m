@@ -76,7 +76,7 @@ end
 
 % function the memductance of memristor
 % derivative of constitutive relation
-function out=G(flux) % memductance
+function out=G(flux) % memductance: dq(flux)/dflux
 
     out = 1 + flux.^2;
 
