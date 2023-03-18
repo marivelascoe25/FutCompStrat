@@ -10,85 +10,52 @@
 
 clc,close all,clear all
 
-fs = 100; %Hz
-v0 = -10;
-vf = 0;
+fs = 1000; %Hz
+v0 = -25;
+vf = 10;
 vs = v0:1/fs:vf;
-T = 90;
+T = 10;
 t0 = 0;
 dt = (T-t0)/(length(vs)-1);
 t = t0:dt:T;
 
-v_M = -25;%[-25, -20, -10, 0, 5, 10]
-
+v_M = -25;
+N = length(v_M);
+%x_M = [];
 %flux0 = -26.6060;
 flux = cumtrapz(t,vs);%+flux0;
+
+%for i = 1:N
 x_M = x(flux,v_M);
-
-x0=v_M+5;
-% simulation time
-%tspan=[0 90];
-% numerical integration tolerances
-options = odeset('RelTol',1e-6,'AbsTol',1e-9);
-%options = odeset('RelTol',1e-1,'AbsTol',1e-4);
-[tt,x_M2] = ode15s(@gg,t,x0,options,v_M);
-x_M2 = x_M2';
-
-G_M = G(x_M);
-G_M2 = G(x_M2);
 g_M = g(x_M,v_M);
-g_M2 = g(x_M2,v_M);
-V_M = -g(x_M,v_M);
-I = G_M.*V_M;
-I2 = G_M2.*vs;
-%i_M = G_M.*v_M;
+V_M = -g(x_M,0);
+i_M = G(x_M).*V_M;
 
-
-subplot(3,2,1)
+subplot(1,3,1)
+hold on
 plot(x_M,g_M)
-xlabel('x_M/Vs')
-ylabel('g_M/V')
-%yyaxis left
-%plot(t,vs)
-%ylabel('v/V')
-%yyaxis right
-%plot(t,I)
-%ylabel('i/A')
-%xlabel('t/s')
+xlim([-20 70])
+ylabel('$g(x,v_{M})$/V','Interpreter','latex')
+xlabel('x/Vs')
+grid on
 
-subplot(3,2,2)
-plot(x_M2,g_M2)
-xlabel('x_M2/Vs')
-ylabel('g_M2/V')
-%plot(vs,I)
-%xlabel('v/V')
-%ylabel('i/A')
+subplot(1,3,2)
+hold on
+plot(V_M,i_M)
+xlim([-20 15])
+%ylim([-20 0])
+ylabel('I/A')
+xlabel('x/Vs')
+grid on
 
-subplot(3,2,3)
-plot(vs,I)
-%xlim([-10,0])
-xlabel('v/V')
-ylabel('i/A')
-%box on;
-%plot(vs,I)
-%xlim([-10,0])
-%grid on;
-
-subplot(3,2,4)
-plot(vs,I2)
-xlim([-10,0])
-xlabel('v/V')
-ylabel('i2/A')
-
-subplot(3,2,5)
-plot(t,x_M)
-xlabel('t/s')
-ylabel('x_M1/Vs')
-
-subplot(3,2,6)
-plot(tt,x_M2)
-xlabel('t/s')
-ylabel('x_M2/Vs')
+subplot(1,3,3)
+hold on
+plot(V_M,i_M)
+xlim([-12 0])
+ylim([-200 100])
+ylabel('I/A')
+xlabel('x/Vs')
+grid on
 
 % One-to-one function
 function out=x(flux,v_M)
@@ -102,12 +69,6 @@ function out=g(x,v_M) % morphing function
 
 out = 30 - x + abs(x-20) - abs(x-40) + v_M;
 
-
-end
-
-function out=gg(t,x,v_M) % morphing function
-
-out = 30 - x + abs(x-20) - abs(x-40) + v_M;
 
 end
 

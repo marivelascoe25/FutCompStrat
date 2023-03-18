@@ -57,7 +57,7 @@ i_L=y(:,1);
 v_C=y(:,2);
 
 
-subplot(1,3,2)
+subplot(1,4,2)
 plot(v_C,i_L)
 hold on % superposing all 10 plots
 xlabel('$v_C$/V','Interpreter','latex')
@@ -68,7 +68,7 @@ vv = v_C(1:2:end); %% remove even elements
 vvv = vv(1:2:end); 
 ii = i_L(1:2:end);
 iii = ii(1:2:end); 
-subplot(1,3,3)
+subplot(1,4,1)
 q = quiver(vvv,iii); %% otherwise too overwelmed
 hold on
 xlabel('$v_C$/V','Interpreter','latex')
@@ -78,10 +78,21 @@ grid on
 
 end
 
-subplot(1,3,1)
+
+subplot(1,4,3)
 plot(v_C,g(v_C,param))
 xlabel('V(V)','Interpreter','latex')
 ylabel('I(A)','Interpreter','latex')
+grid on
+
+subplot(1,4,4)
+yyaxis left
+plot(t,i_L)
+ylabel('I(A)')
+yyaxis right
+plot(t,v_C)
+ylabel('V(V)')
+xlabel('t(s)')
 grid on
 
 

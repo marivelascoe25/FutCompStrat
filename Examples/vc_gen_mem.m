@@ -30,9 +30,6 @@ switch n
     otherwise
         disp('No valid entry')
 end
-syms xx
-%G_M = diff(q(xx),xx);
-%g_M = diff(x(xx),xx);
 
 flux0 = -0.4;
 flux = cumtrapz(t,v_M)+flux0;
@@ -76,8 +73,8 @@ xlabel('t/s')
 subplot(2,2,4)
 plot(t,x_M)
 %xlim([-3 3])
-xlabel('$\varphi$/Vs','Interpreter','latex')
-ylabel('q/C')
+xlabel('t/s','Interpreter','latex')
+ylabel('x/Vs')
 
 % One-to-one function
 function out=x(flux)
