@@ -31,14 +31,15 @@ g_M = g(x_M,v_M);
 V_M = -g(x_M,0);
 i_M = G(x_M).*V_M;
 
-subplot(3,3,1)
-hold on
-plot(x_M,g_M)
-xlim([-20 70])
-ylabel('$g(x,v_{M})$/V','Interpreter','latex')
-xlabel('x/Vs')
-grid on
+% subplot(3,3,1)
+% hold on
+% plot(x_M,g_M)
+% xlim([-20 70])
+% ylabel('$g(x,v_{M})$/V','Interpreter','latex')
+% xlabel('x/Vs')
+% grid on
 
+%% Loci of V vs X
 subplot(3,3,2)
 hold on
 plot(x_M,V_M)
@@ -47,6 +48,7 @@ ylabel('V/V')
 xlabel('x/Vs')
 grid on
 
+%% Loci of I vs X
 subplot(3,3,4)
 hold on
 plot(x_M,i_M)
@@ -72,6 +74,7 @@ ylabel('I/A')
 xlabel('x/Vs')
 grid on
 
+%% DC V-I curve of the CCM
 subplot(3,3,7)
 hold on
 plot(V_M,i_M)
@@ -81,6 +84,7 @@ ylabel('I/A')
 xlabel('V/V')
 grid on
 
+% Negative slope region 1 -> Locally-Active Domain 1
 subplot(3,3,8)
 hold on
 plot(V_M,i_M)
@@ -90,6 +94,7 @@ ylabel('I/A')
 xlabel('V/V')
 grid on
 
+% Negative slope region 2 -> Locally-Active Domain 2
 subplot(3,3,9)
 hold on
 plot(V_M,i_M)
@@ -98,6 +103,9 @@ ylim([-24650 -24500])
 ylabel('I/A')
 xlabel('V/V')
 grid on
+
+% LAD1 = -5 < V < -1.6667 --> Edge of Chaos domain 1
+% LAD2 = -20 < V < -18.3333 --> Edge of Chaos domain 2
 
 % One-to-one function
 function out=x(flux,v_M)

@@ -1,4 +1,4 @@
-%% Chua corsage memristor (CCM)
+%% Local Activity of the Chua corsage memristor (CCM)
 % Voltage-controlled ideal generic memristor
 % It can be derived from a flux-controlled memristor
 % State-dependent Ohm's law state equation
@@ -10,64 +10,44 @@
 
 clc,close all,clear all
 
-fs = 1000; %Hz
-v0 = -25;
-vf = 10;
+fs = 500; %Hz
+v0 = -20;
+vf = 15;
 vs = v0:1/fs:vf;
 T = 10;
 t0 = 0;
 dt = (T-t0)/(length(vs)-1);
 t = t0:dt:T;
 
-v_M = -25;
-N = length(v_M);
-%x_M = [];
+v_M = [-25, -20, -10, 0, 5, 10];
+
+for i = 1:length(v_M)
 %flux0 = -26.6060;
 flux = cumtrapz(t,vs);%+flux0;
+x_M = x(flux,v_M(i));
+g_M = g(x_M,v_M(i));
 
-%for i = 1:N
-x_M = x(flux,v_M);
-g_M = g(x_M,v_M);
-V_M = -g(x_M,0);
-i_M = G(x_M).*V_M;
-
-subplot(1,3,1)
+%% Family of state dynamic routes of the CCM
 hold on
-plot(x_M,g_M)
+plot(x_M,g_M,'DisplayName',int2str(v_M(i)))
 xlim([-20 70])
 ylabel('$g(x,v_{M})$/V','Interpreter','latex')
 xlabel('x/Vs')
 grid on
+legend
 
-subplot(1,3,2)
-hold on
-plot(V_M,i_M)
-xlim([-20 15])
-%ylim([-20 0])
-ylabel('I/A')
-xlabel('x/Vs')
-grid on
-
-subplot(1,3,3)
-hold on
-plot(V_M,i_M)
-xlim([-12 0])
-ylim([-200 100])
-ylabel('I/A')
-xlabel('x/Vs')
-grid on
+end
 
 % One-to-one function
 function out=x(flux,v_M)
     
-    %out = 17/8*flux - 15/8*abs(flux);
-    out = 30*flux - flux.^2/2 + sign(flux-20).*(flux-20).^2/2 - sign(flux-40).*(flux-40).^2/2 + v_M*flux;
+    out = 30*flux - flux.^2/2 + sign(flux-10).*(flux-10).^2/2 - sign(flux-35).*(flux-35).^2/2 + v_M*flux;
     %out = (-4000 + 180*flux - 3*flux.^2 + (5600 - 260*flux + 3*flux.^2)*sign(40 - flux) - (-20 + flux)*sign(20 - flux)*(-40 + 3*flux + (-40 + flux)*sign(40 - flux)))/8;
 end
 
 function out=g(x,v_M) % morphing function
 
-out = 30 - x + abs(x-20) - abs(x-40) + v_M;
+out = 30 - x + abs(x-10) - abs(x-35) + v_M;%*ones(length(x));
 
 
 end
