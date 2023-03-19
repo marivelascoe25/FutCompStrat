@@ -12,7 +12,7 @@
 
 clc,close all,clear all
 
-fs = 500; %Hz
+fs = 1000; %Hz
 v0 = -25;
 vf = 10;
 vs = v0:1/fs:vf;
@@ -34,23 +34,22 @@ V_M = -g(x_M,0);
 i_M = G(x_M).*V_M;
 
 %% Loci of V vs X
-subplot(2,3,1)
+subplot(1,3,1)
 plot(x_M,V_M)
 xlim([-20 70])
-ylabel('$v_{M})$/V','Interpreter','latex')
-xlabel('x/Vs')
+ylabel('V/V')
+xlabel('X/Vs')
 grid on
 
 % LAD1 = -5 < V < -1.6667 --> Edge of Chaos domain 1
 % LAD2 = -20 < V < -18.3333 --> Edge of Chaos domain 2
+% -10 < V < -1 where X < 10
+% -20 < V < -10 where X > 35
 
-%LAD (-1.6667,-5,x_M,g_M,V_M,i_M);
-%LAD (-18.3333,-20,x_M,g_M,V_M,i_M);
-LAD (10,"lower",x_M,g_M,V_M,i_M);
-LAD (35,"higher",x_M,g_M,V_M,i_M);
+Edge_of_Chaos (10,"lower",x_M,g_M,V_M,i_M);
+%Edge_of_Chaos (35,"higher",x_M,g_M,V_M,i_M);
 
-
-function LAD (xQ,caseQ,x_M,g_M,V_M,i_M)
+function Edge_of_Chaos (xQ,caseQ,x_M,g_M,V_M,i_M)
 
 N = length(x_M);
 [val,idx]=min(abs(x_M-xQ));
@@ -65,13 +64,6 @@ else
     g_M = g_M(1:idx+1);
     i_M = i_M(1:idx+1);
 end
-%[valf,if_Q]=min(abs(X_M+vf));
-% x_M = x_M(if_Q+1:i0_Q+1);
-% V_M = V_M(if_Q+1:i0_Q+1);
-% g_M = g_M(if_Q+1:i0_Q+1);
-% i_M = i_M(if_Q+1:i0_Q+1);
-
-
 
 a11 = 2*x_M.*V_M;
 a12 = x_M.^2;
@@ -85,7 +77,6 @@ for i=1:length(x_M)
 end
 
 b12 = 1;
-
 
 Lx = 1./(b12.*a11);
 Rx = -b11./(b12.*a11);
@@ -103,7 +94,7 @@ Y_Im = Im(w,Rx,Ry,Lx);
 
 
 %% LAD1
-subplot(2,3,5)
+subplot(1,3,2)
 %hold on
 yyaxis left
 plot(w,Y_Im)
@@ -115,7 +106,7 @@ xlabel('w/(rad/s)')
 grid on
 
 %% LAD2
-% subplot(2,3,6)
+% subplot(2,3,3)
 % plot(V_M,p)
 % xlim([-20 -2])
 % ylim([-2 1])

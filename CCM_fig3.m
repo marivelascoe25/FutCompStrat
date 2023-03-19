@@ -39,13 +39,27 @@ i_M = G(x_M).*V_M;
 % xlabel('x/Vs')
 % grid on
 
+Loci (10,-20,x_M,g_M,V_M,i_M);
+Loci (35,10,x_M,g_M,V_M,i_M);
+Loci (70,35,x_M,g_M,V_M,i_M);
+
+function Loci (x0,xf,x_M,g_M,V_M,i_M)
+
+[val,idx0]=min(abs(x_M-x0));
+[val,idxf]=min(abs(x_M-xf));
+
+x_M = x_M(idx0+1:idxf+1);
+V_M = V_M(idx0+1:idxf+1);
+g_M = g_M(idx0+1:idxf+1);
+i_M = i_M(idx0+1:idxf+1);
+
 %% Loci of V vs X
 subplot(3,3,2)
 hold on
 plot(x_M,V_M)
 xlim([-20 70])
 ylabel('V/V')
-xlabel('x/Vs')
+xlabel('X/Vs')
 grid on
 
 %% Loci of I vs X
@@ -104,6 +118,7 @@ ylabel('I/A')
 xlabel('V/V')
 grid on
 
+end
 % LAD1 = -5 < V < -1.6667 --> Edge of Chaos domain 1
 % LAD2 = -20 < V < -18.3333 --> Edge of Chaos domain 2
 

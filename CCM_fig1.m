@@ -39,6 +39,21 @@ ylabel('$g(x,v_{M})$/V','Interpreter','latex')
 xlabel('x/Vs')
 grid on
 
+Loci (20,-20,x_M,g_M,V_M,i_M);
+Loci (40,20,x_M,g_M,V_M,i_M);
+Loci (70,40,x_M,g_M,V_M,i_M);
+
+function Loci (x0,xf,x_M,g_M,V_M,i_M)
+
+N = length(x_M);
+[val,idx0]=min(abs(x_M-x0));
+[val,idxf]=min(abs(x_M-xf));
+
+x_M = x_M(idx0+1:idxf+1);
+V_M = V_M(idx0+1:idxf+1);
+g_M = g_M(idx0+1:idxf+1);
+i_M = i_M(idx0+1:idxf+1);
+
 %% DC V-I curve of the CCM
 subplot(1,3,2)
 hold on
@@ -46,7 +61,7 @@ plot(V_M,i_M)
 xlim([-20 15])
 %ylim([-20 0])
 ylabel('I/A')
-xlabel('x/Vs')
+xlabel('V/V')
 grid on
 
 subplot(1,3,3)
@@ -55,8 +70,10 @@ plot(V_M,i_M)
 xlim([-12 0])
 ylim([-200 100])
 ylabel('I/A')
-xlabel('x/Vs')
+xlabel('V/V')
 grid on
+
+end
 
 % One-to-one function
 function out=x(flux,v_M)

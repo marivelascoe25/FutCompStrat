@@ -11,7 +11,7 @@
 clc,close all,clear all
 
 fs = 500; %Hz
-v0 = -20;
+v0 = -30;
 vf = 15;
 vs = v0:1/fs:vf;
 T = 10;

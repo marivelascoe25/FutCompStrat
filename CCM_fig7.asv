@@ -46,30 +46,20 @@ grid on
 
 %LAD (-1.6667,-5,x_M,g_M,V_M,i_M);
 %LAD (-18.3333,-20,x_M,g_M,V_M,i_M);
-LAD (10,"lower",x_M,g_M,V_M,i_M);
-LAD (35,"higher",x_M,g_M,V_M,i_M);
+Loci (10,-20,x_M,g_M,V_M,i_M);
+Loci (35,10,x_M,g_M,V_M,i_M);
+Loci (70,35,x_M,g_M,V_M,i_M);
 
-
-function LAD (xQ,caseQ,x_M,g_M,V_M,i_M)
+function Edge_of_Chaos (x0,xf,x_M,g_M,V_M,i_M)
 
 N = length(x_M);
-[val,idx]=min(abs(x_M-xQ));
-if caseQ == 'lower'
-    x_M = x_M(idx+1:N);
-    V_M = V_M(idx+1:N);
-    g_M = g_M(idx+1:N);
-    i_M = i_M(idx+1:N);
-else
-    x_M = x_M(1:idx+1);
-    V_M = V_M(1:idx+1);
-    g_M = g_M(1:idx+1);
-    i_M = i_M(1:idx+1);
-end
-%[valf,if_Q]=min(abs(X_M+vf));
-% x_M = x_M(if_Q+1:i0_Q+1);
-% V_M = V_M(if_Q+1:i0_Q+1);
-% g_M = g_M(if_Q+1:i0_Q+1);
-% i_M = i_M(if_Q+1:i0_Q+1);
+[val,idx0]=min(abs(x_M-x0));
+[val,idxf]=min(abs(x_M-xf));
+
+x_M = x_M(idx0+1:idxf+1);
+V_M = V_M(idx0+1:idxf+1);
+g_M = g_M(idx0+1:idxf+1);
+i_M = i_M(idx0+1:idxf+1);
 
 
 
