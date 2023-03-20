@@ -1,4 +1,4 @@
-%% Chua corsage memristor (CCM)-Based Second-Order Circuit
+%% Edge of Chaos of the Chua corsage memristor (CCM)
 % Voltage-controlled ideal generic memristor
 % It can be derived from a flux-controlled memristor
 % State-dependent Ohm's law state equation
@@ -8,7 +8,6 @@
 % G defines the memductance function: G(x) = dq(flux)/dflux
 % g defines the morphing function g(x) = dx(flux)/dflux
 % Small-signal Analysis and Edge of Caos
-%
 
 clc,close all,clear all
 
@@ -34,26 +33,25 @@ V_M = -g(x_M,0);
 i_M = G(x_M).*V_M;
 
 %% Loci of V vs X
-subplot(1,3,1)
+subplot(3,2,1)
 plot(x_M,V_M)
 xlim([-20 70])
 ylabel('V/V')
 xlabel('X/Vs')
 grid on
 
-% LAD1 = -5 < V < -1.6667 --> Edge of Chaos domain 1
-% LAD2 = -20 < V < -18.3333 --> Edge of Chaos domain 2
+% Zero-pole diagrams of Y of the CCM over the voltage range
 % -10 < V < -1 where X < 10
+LAD (10,"domain 1",x_M,g_M,V_M,i_M);
 % -20 < V < -10 where X > 35
+LAD (35,"domain 2",x_M,g_M,V_M,i_M);
 
-Edge_of_Chaos (10,"lower",x_M,g_M,V_M,i_M);
-%Edge_of_Chaos (35,"higher",x_M,g_M,V_M,i_M);
 
-function Edge_of_Chaos (xQ,caseQ,x_M,g_M,V_M,i_M)
+function LAD (xQ,caseQ,x_M,g_M,V_M,i_M)
 
 N = length(x_M);
-[val,idx]=min(abs(x_M-xQ));
-if caseQ == "lower"
+[x_Q,idx]=min(abs(x_M-xQ));
+if caseQ == "domain 1"
     x_M = x_M(idx+1:N);
     V_M = V_M(idx+1:N);
     g_M = g_M(idx+1:N);
@@ -64,7 +62,7 @@ else
     g_M = g_M(1:idx+1);
     i_M = i_M(1:idx+1);
 end
-
+%display(length(x_M))
 a11 = 2*x_M.*V_M;
 a12 = x_M.^2;
 
@@ -78,6 +76,7 @@ end
 
 b12 = 1;
 
+
 Lx = 1./(b12.*a11);
 Rx = -b11./(b12.*a11);
 Ry = 1./a12;
@@ -85,34 +84,77 @@ Ry = 1./a12;
 p = -Rx./Lx;
 z = -(Rx+Ry)./Lx;
 
-w0 = -10;
-wf = 10;
-dw = (wf-w0)/(length(Lx)-1);
-w = -10:dw:10;
-Y_Re = Re(w,Rx,Ry,Lx);
-Y_Im = Im(w,Rx,Ry,Lx);
-
-
-%% LAD1
-subplot(1,3,2)
-%hold on
-yyaxis left
-plot(w,Y_Im)
-ylabel('ImY/S')
-yyaxis right
-plot(w,Y_Re)
-ylabel('ReY/S')
-xlabel('w/(rad/s)')
+%% Plot of zero vs V
+subplot(3,2,2)
+hold on
+plot(V_M,z, "x")
+xlim([-20 -2])
+ylim([-30 30])
+ylabel('Zero')
+xlabel('V/V')
 grid on
 
-%% LAD2
-% subplot(2,3,3)
-% plot(V_M,p)
-% xlim([-20 -2])
-% ylim([-2 1])
-% ylabel('Pole')
-% xlabel('V/V')
-% grid on
+% Edge of caos domain 2
+subplot(3,2,3)
+hold on
+plot(V_M,z)
+xlim([-20 -16])
+ylim([-0.3 0.3])
+ylabel('Zero')
+xlabel('V/V')
+grid on
+
+%% Plot of pole vs V
+subplot(3,2,4)
+hold on
+plot(V_M,p)
+xlim([-20 -2])
+ylim([-2 1])
+ylabel('Pole')
+xlabel('V/V')
+grid on
+
+%% Frequency responses
+% LAD1 = -5 < V < -1.6667 --> Edge of Chaos domain 1
+% LAD2 = -20 < V < -18.3333 --> Edge of Chaos domain 2
+if caseQ == "domain 1"
+    [Vw,idx]=min(abs(V_M+4.5));
+    w0 = -10;
+    wf = 10;
+    w = w0:1/100:wf;
+    Re_Y = Re(w,Rx(idx),Ry(idx),Lx(idx));
+    Im_Y =Im(w,Rx(idx),Ry(idx),Lx(idx));
+
+    subplot(3,2,5)
+    yyaxis left
+    plot(w,Im_Y)
+    ylabel('ImY/S')
+    yyaxis right
+    plot(w,Re_Y)
+    ylabel('ReY/S')
+    xlabel('w(rad/s)')
+    grid on
+
+else
+    [Vw,idx]=min(abs(V_M+19));
+    w0 = -1;
+    wf = 1;
+    w = w0:1/100:wf;
+    Re_Y = Re(w,Rx(idx),Ry(idx),Lx(idx));
+    Im_Y =Im(w,Rx(idx),Ry(idx),Lx(idx));
+
+    subplot(3,2,6)
+    yyaxis left
+    plot(w,Im_Y)
+    ylabel('ImY/S')
+    yyaxis right
+    plot(w,Re_Y)
+    ylabel('ReY/S')
+    xlabel('w(rad/s)')
+    grid on
+
+end
+
 
 end
 
@@ -132,28 +174,26 @@ function out=Im(w,Rx,Ry,Lx)
 
 end
 
+
 % One-to-one function
 function out=x(flux,v_M)%,param)
     
     out = 30*flux - flux.^2/2 + sign(flux-10).*(flux-10).^2/2 - sign(flux-35).*(flux-35).^2/2 + v_M*flux;
-    %out = param(1)*flux + param(2)*flux.^2/2 + param(3)*v_M.^2 + param(4)*v_M.^2*flux.^2/2 + param(4)*v_M.^2*flux.^3/3 + param(5)*v_M.^2*flux.^4/4 + param(6)*v_M.^2*flux.^5/5 + param(7)*v_M.^2*flux.^6/6;
-
+    
 end
 
 function out=g(x,v_M)%,param) % morphing function
 
     out = 30 - x + abs(x-10) - abs(x-35) + v_M;
-    %out = param(1) + param(2)*x + param(3)*v_M.^2 + param(4)*v_M.^2*x + param(5)*v_M.^2*x.^2 + param(6)*v_M.^2*x.^3 + param(7)*v_M.^2*x.^4 + param(8)*v_M.^2*x.^5;
-
+    
 end
 
 % function the memductance of memristor
 % derivative of constitutive relation
-function out=G(x) % memductance
+function out=G(x)%,param) % memductance
 
     G0 = 1;
     out = G0*x.^2;
-    %out = param(9) + param(10)*x + param(11)*x.^2 + param(12)*x.^3 + param(13)*x.^4;
 
 end
 
